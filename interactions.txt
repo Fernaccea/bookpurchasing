@@ -1,0 +1,50 @@
+BankAgent (BA)
+- setup:
+  - BankAccount for PA and TA (like a database for bank account)
+    - Using ArrayList
+
+step:
+1 - 4) received query from PA - PA-step2
+       - reply (inform) with total money to PA - PA-step3
+
+2 - 6) received request from PA - PA-step3
+       - deduct, update balance and 
+       - send money to TA (inform) - TA-step2
+
+TicketAgent (TA)
+- setup:
+  - Tickets for sell (like a database for tickets)
+    - Using ArrayList
+  - set account no
+
+step:
+1 - 2) received request from PA (setup method)
+       - find the ticket
+       - send reply to PA - PA-step-2
+         - ticket unavailable - send refuse
+         - ticket available - send ticket info
+2 - 7) received money from BA - BA-step2
+       - send inform to PA - success - PA-step4
+
+
+PersonalAgent (PA)
+- setup:
+  - set account no
+
+step:
+1 - 1) request to TA (data: location, destination, time) - TA-step1
+
+2 - 3) received inform/refuse from TA - step1
+       if inform
+         send query to check if fund available to BA-step1
+       else
+         done - buy ticket failed - ticket not available
+
+3 - 5) receive reply (total money) from BA - BA-step1
+       if total money >= amount to pay
+         request to BA to send money to TA - BA-step2
+       else
+         done - buy ticket failed - money not enough
+
+4 - 8) received inform from TA - TA-step2
+       - done - buy ticket success
