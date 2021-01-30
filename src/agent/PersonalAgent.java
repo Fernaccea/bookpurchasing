@@ -207,21 +207,10 @@ public class PersonalAgent extends Agent {
     }
     
     public void requestBookPurchase(ArrayList<SimpleBook> booklist) {
-        //Generate ticket object for ticket request
-        TicketInfo ti = new TicketInfo();
-        ti.setLocation("Johor Bahru");
-        ti.setDestination("Kota Bharu");
-        ti.setTime("9.00 AM");
-
-        System.out.println("PA: Requesting ticket info");
-        System.out.println("PA: Location: " + ti.getLocation());
-        System.out.println("PA: Destination: " + ti.getDestination());
-        System.out.println("PA: Time: " + ti.getTime());
-        System.out.println("");
 
         try {
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-            msg.setContentObject(ti);
+            msg.setContentObject(booklist);
             msg.addReceiver(new AID("TA", AID.ISLOCALNAME));
 
             send(msg);
