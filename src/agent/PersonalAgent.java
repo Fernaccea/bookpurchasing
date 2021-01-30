@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import data.Ticket;
 import data.PaymentInfo;
 import data.SimpleBook;
+import data.SimpleBookList;
 
 /**
  *
@@ -25,6 +26,8 @@ public class PersonalAgent extends Agent {
     
     String bankAccountNo = "222222";
     private BookShopUI bookshopUi;
+    private ArrayList<SimpleBook> booklist;
+    private double total;
     
     protected void setup() {
         
@@ -206,8 +209,11 @@ public class PersonalAgent extends Agent {
         });     
     }
     
-    public void requestBookPurchase(ArrayList<SimpleBook> booklist) {
-
+    public void requestBookPurchase(ArrayList<SimpleBook> booklist, double total) {
+        
+        this.booklist = booklist;
+        this.total = total;
+        
         try {
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
             msg.setContentObject(booklist);

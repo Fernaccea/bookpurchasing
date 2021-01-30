@@ -191,7 +191,7 @@ public class BookShopUI extends javax.swing.JFrame {
             SimpleBook sb = new SimpleBook(title,author,price);
             bookList.add(sb);
         }
-        myAgent.requestBookPurchase(bookList);
+        myAgent.requestBookPurchase(bookList,total);
     }//GEN-LAST:event_PurchaseActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
