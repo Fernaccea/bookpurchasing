@@ -48,32 +48,32 @@ public class BankAgent extends Agent {
                         
                         if (msg != null) {
                             
-                            System.out.println("BA: Executing Step-1");
+                            System.out.println("BankAgent: Executing Step-1");
                             System.out.println("");
 
                             try {
                                 PaymentInfo pi = (PaymentInfo)msg.getContentObject();
 
-                                System.out.println("BA: Received bank account balance request from PA");
-                                System.out.println("BA: Ticket price: " + pi.getAmount());
-                                System.out.println("BA: PA account no: " + pi.getBuyerAccountNo());
+                                System.out.println("BankAgent: Received bank account balance request from PA");
+                                System.out.println("BankAgent: Book price: " + pi.getAmount());
+                                System.out.println("BankAgent: PA account no: " + pi.getBuyerAccountNo());
 
                                 double amountToPay = pi.getAmount();
                                 String buyerAccountNo = pi.getBuyerAccountNo();
 
                                 double buyerAccountBalance = getAccountBalance(buyerAccountNo);
-                                System.out.println("BA: PA account balance: " + buyerAccountBalance);
+                                System.out.println("BankAgent: PA account balance: " + buyerAccountBalance);
                                 pi.setBuyerCurrentBalance(buyerAccountBalance);
 
                                 if (buyerAccountBalance > amountToPay) {
-                                    System.out.println("BA: PA balance is enough for payment");
+                                    System.out.println("BankAgent: PA balance is enough for payment");
                                     System.out.println("");
                                     pi.setEnough(true);
 
                                     step = 2;
 
                                 } else {
-                                    System.out.println("BA: PA balance is not enough for payment");
+                                    System.out.println("BankAgent: PA balance is not enough for payment");
                                     System.out.println("");
                                     pi.setEnough(false);
 
@@ -81,7 +81,7 @@ public class BankAgent extends Agent {
                                 }
 
                                 //- reply with PaymentInfo pi object to PA - PA-step2
-                                System.out.println("BA: senc reply to PA - bank account balance");
+                                System.out.println("BankAgent: Send reply to PA - Bank account balance");
                                 System.out.println("");
                                 ACLMessage reply = msg.createReply();
                                 reply.setPerformative( ACLMessage.INFORM);
@@ -99,26 +99,26 @@ public class BankAgent extends Agent {
                         
                         if (msg2 != null) {
                             
-                            System.out.println("BA: Executing Step-2");
+                            System.out.println("BankAgent: Executing Step-2");
                             System.out.println("");
 
                             try {
                                 
                                 PaymentInfo pi = (PaymentInfo)msg2.getContentObject();
                                 
-                                System.out.println("BA: Received ticket payment request from PA");
-                                System.out.println("BA: Ticket price: " + pi.getAmount());
-                                System.out.println("BA: Ticket id: " + pi.getTicketId());
-                                System.out.println("BA: PA account no: " + pi.getBuyerAccountNo());
-                                System.out.println("BA: TA account no: " + pi.getSellerAccountNo());
+                                System.out.println("BankAgent: Received book payment request from PA");
+                                System.out.println("BankAgent: Book price: " + pi.getAmount());
+                                System.out.println("BankAgent: Book id: " + pi.getBookId());
+                                System.out.println("BankAgent: PA account no: " + pi.getBuyerAccountNo());
+                                System.out.println("BankAgent: BookAgent account no: " + pi.getSellerAccountNo());
                                 System.out.println("");
                                 
                                 double amountToPay = pi.getAmount();
                                 String buyerAccountNo = pi.getBuyerAccountNo();
                                 String sellerAccountNo = pi.getSellerAccountNo();
                                 
-                                System.out.println("BA: PA account balance before payment: " + getAccountBalance(buyerAccountNo));
-                                System.out.println("BA: TA account balance before payment: " + getAccountBalance(sellerAccountNo));
+                                System.out.println("BankAgent: PA account balance before payment: " + getAccountBalance(buyerAccountNo));
+                                System.out.println("BankAgent: BookAgent account balance before payment: " + getAccountBalance(sellerAccountNo));
                                 System.out.println("");
                                 
                                 pi.setSellerPreviousBalance(getAccountBalance(sellerAccountNo));
@@ -126,8 +126,8 @@ public class BankAgent extends Agent {
                                 
                                 doPayment(amountToPay, buyerAccountNo, sellerAccountNo);
                                 
-                                System.out.println("BA: PA account balance after payment: " + getAccountBalance(buyerAccountNo));
-                                System.out.println("BA: TA account balance after payment: " + getAccountBalance(sellerAccountNo));
+                                System.out.println("BankAgent: PA account balance after payment: " + getAccountBalance(buyerAccountNo));
+                                System.out.println("BankAgent: BookAgent account balance after payment: " + getAccountBalance(sellerAccountNo));
                                 System.out.println("");
                                 
                                 pi.setSellerCurrentBalance(getAccountBalance(sellerAccountNo));
@@ -135,13 +135,13 @@ public class BankAgent extends Agent {
                                 
                                 step = 1;
                                 
-                                //- info TA about fund credit - send pi object
-                                System.out.println("BA: Send payment info to TA");
+                                //- info BookAgent about fund credit - send pi object
+                                System.out.println("BankAgent: Send payment info to BookAgent");
                                 System.out.println("");
                                 
                                 ACLMessage msg3 = new ACLMessage(ACLMessage.INFORM);
                                 msg3.setContentObject(pi);
-                                msg3.addReceiver(new AID( "TA", AID.ISLOCALNAME) );
+                                msg3.addReceiver(new AID( "BookAgent", AID.ISLOCALNAME) );
                                 send(msg3);
                                 
                             } catch (Exception ex) {}                            
