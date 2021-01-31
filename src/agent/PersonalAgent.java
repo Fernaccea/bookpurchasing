@@ -10,9 +10,9 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.core.AID;
 
-import data.TicketInfo;
+import data.BookInfo;
 import java.util.ArrayList;
-import data.Ticket;
+import data.Book;
 import data.PaymentInfo;
 import data.SimpleBook;
 
@@ -47,14 +47,14 @@ public class PersonalAgent extends Agent {
                 
                 switch (step) {
                     
-                    case 1: //send ticket info search to TA
+                    case 1: //send book info search to BookAgent
                         
                         System.out.println("PA: Executing Step-1");
                         System.out.println("");
                         step = 2;
                         
-                    case 2: //received Ticket ArrayList (INFORM) or TicketInfo (REFUSE)
-                            //received refuse - ticket not available
+                    case 2: //received Book ArrayList (INFORM) or BookInfo (REFUSE)
+                            //received refuse - book not available
                         
                         ACLMessage msg = receive();
                         
@@ -65,12 +65,13 @@ public class PersonalAgent extends Agent {
                             
                             if (msg.getPerformative()== ACLMessage.REFUSE) {
                                 try {
-                                    TicketInfo ti2 = (TicketInfo)msg.getContentObject();
+                                    BookInfo bi2 = (BookInfo)msg.getContentObject();
 
-                                    if (!ti2.isAvailable()) {
-                                        System.out.println("PA: received ticket info reply from TA => Ticket not available");
-                                        System.out.println("PA: Location: " + ti2.getLocation());
-                                        System.out.println("PA: Destination: " + ti2.getDestination());
+                                    if (!bi2.isAvailable()) {
+                                        System.out.println("PA: received book info reply from BA => Book not available");
+                                        System.out.println("PA: Title: " + bi2.getTitle());
+                                        System.out.println("PA: Author: " + bi2.getAuthor());
+                                        System.out.println("PA: Publisher: " + bi2.getPublisher());
                                         System.out.println("");
 
                                         step = 1;
@@ -80,47 +81,45 @@ public class PersonalAgent extends Agent {
 
                             if (msg.getPerformative()== ACLMessage.INFORM) {
 
-                                Ticket theTicket = null;
+                                Book theBook = null;
 
                                 try {
-                                    System.out.println("PA: received ticket info reply from TA => Ticket available");
-                                    ArrayList tickets = (ArrayList)msg.getContentObject();                                     
+                                    System.out.println("PA: received book info reply from BA => Book available");
+                                    ArrayList books = (ArrayList)msg.getContentObject();                                     
 
-                                    for(int i=0; i<tickets.size(); i++) {
-                                        Ticket ticket = (Ticket)tickets.get(i);
-                                        System.out.println("PA: ID: " + ticket.getId());
-                                        System.out.println("PA: Destination: " + ticket.getDestination());
-                                        System.out.println("PA: Location: " + ticket.getLocation());
-                                        System.out.println("PA: Company: " + ticket.getCompany());
-                                        System.out.println("PA: Time: " + ticket.getTime());
-                                        System.out.println("PA: Seat No: " + ticket.getSeatNo());
-                                        System.out.println("PA: Price: " + ticket.getPrice());
-                                        System.out.println("PA: Bank Account No: " + ticket.getBankAccountNo());
+                                    for(int i=0; i<books.size(); i++) {
+                                        Book book = (Book)books.get(i);
+                                        System.out.println("PA: ID: " + book.getId());
+                                        System.out.println("PA: Title: " + book.getTitle());
+                                        System.out.println("PA: Author: " + book.getAuthor());
+                                        System.out.println("PA: Publisher: " + book.getPublisher());
+                                        System.out.println("PA: Price: " + book.getPrice());
+                                        System.out.println("PA: Bank Account No: " + book.getBankAccountNo());
                                         System.out.println("");
 
-                                        theTicket = ticket;
+                                        theBook = book;
                                     }    
                                 } catch (Exception ex) {}
 
-                                if (theTicket != null) {
+                                if (theBook != null) {
                                     System.out.println("PA: Send request to bank for current balance");
                                     System.out.println("");
 
                                     PaymentInfo pi = new PaymentInfo();
-                                    pi.setAmount(theTicket.getPrice());
-                                    pi.setTicketId(theTicket.getId());
-                                    pi.setLocation(theTicket.getLocation());
-                                    pi.setDestination(theTicket.getDestination());
-                                    pi.setTime(theTicket.getTime());
+                                    pi.setAmount(theBook.getPrice());
+                                    pi.setBookId(theBook.getId());
+                                    pi.setTitle(theBook.getTitle());
+                                    pi.setAuthor(theBook.getAuthor());
+                                    pi.setPublisher(theBook.getPublisher());
                                     pi.setBuyerAccountNo(bankAccountNo); //PA account no
-                                    pi.setSellerAccountNo(theTicket.getBankAccountNo()); //TA account no
+                                    pi.setSellerAccountNo(theBook.getBankAccountNo()); //TA account no
 
                                     step = 3;
 
                                     try {
                                         ACLMessage msg2 = new ACLMessage(ACLMessage.REQUEST);
                                         msg2.setContentObject(pi);
-                                        msg2.addReceiver(new AID( "BA", AID.ISLOCALNAME) );
+                                        msg2.addReceiver(new AID( "BankAgent", AID.ISLOCALNAME) );
                                         send(msg2);
                                     } catch (Exception ex) {}                                    
 
@@ -142,14 +141,14 @@ public class PersonalAgent extends Agent {
                                 PaymentInfo pi = (PaymentInfo)msg2.getContentObject();
 
                                 if (pi.isEnough()) {
-                                    System.out.println("PA: received account balance info from BA => Balance enough for payment");
+                                    System.out.println("PA: Received account balance info from BankAgent => Balance enough for payment");
                                     System.out.println("PA: Current account balance: " + pi.getBuyerCurrentBalance());
-                                    System.out.println("PA: Ticket price: " + pi.getAmount());
+                                    System.out.println("PA: Book price: " + pi.getAmount());
                                     System.out.println("");
 
-                                    //- reply with PaymentInfo pi object to BA - BA-step2
-                                    //- this for doing payment, send money to TA
-                                    System.out.println("PA: Send request to BA for payment to TA");                                    
+                                    //- reply with PaymentInfo pi object to BookAgent - BookAgent-step2
+                                    //- this for doing payment, send money to BookAgent
+                                    System.out.println("PA: Send request to BankAgent for payment to BookAgent");                                    
                                     System.out.println("");
                                     ACLMessage reply = msg2.createReply();
                                     reply.setPerformative( ACLMessage.REQUEST);
@@ -159,13 +158,13 @@ public class PersonalAgent extends Agent {
                                     step = 4;
 
                                 } else {
-                                    System.out.println("PA: received account balance info from BA => Balance not enough for payment");
+                                    System.out.println("PA: Received account balance info from BankAgent => Balance not enough for payment");
                                     System.out.println("PA: Current account balance: " + pi.getBuyerCurrentBalance());
-                                    System.out.println("PA: Ticket price: " + pi.getAmount());
-                                    System.out.println("PA: ticket buying operation failed - done");
+                                    System.out.println("PA: Book price: " + pi.getAmount());
+                                    System.out.println("PA: Book buying operation failed - done");
                                     System.out.println("");
 
-                                    //reset for next ticket search
+                                    //reset for next book search
                                     step = 1;
                                 }
                             } catch (Exception ex) {}
@@ -186,12 +185,12 @@ public class PersonalAgent extends Agent {
                                 
                                 PaymentInfo pi = (PaymentInfo)msg3.getContentObject();
                                 
-                                System.out.println("PA: received ticket selling status from TA => ticket selling success!");
-                                System.out.println("PA: Ticket id: " + pi.getTicketId());
-                                System.out.println("PA: Location: " + pi.getLocation());
-                                System.out.println("PA: Destination: " + pi.getDestination());
-                                System.out.println("PA: Time: " + pi.getTime());
-                                System.out.println("PA: Ticket price: " + pi.getAmount());
+                                System.out.println("PA: Received book selling status from BookAgent => Book selling success!");
+                                System.out.println("PA: Book id: " + pi.getBookId());
+                                System.out.println("PA: Title: " + pi.getTitle());
+                                System.out.println("PA: Author: " + pi.getAuthor());
+                                System.out.println("PA: Publisher: " + pi.getPublisher());
+                                System.out.println("PA: Book price: " + pi.getAmount());
                                 System.out.println("PA: Previous account balance: " + pi.getBuyerPreviousBalance());
                                 System.out.println("PA: Current account balance: " + pi.getBuyerCurrentBalance());
                                 System.out.println("");
@@ -207,22 +206,23 @@ public class PersonalAgent extends Agent {
     }
     
     public void requestBookPurchase(ArrayList<SimpleBook> booklist) {
-        //Generate ticket object for ticket request
-        TicketInfo ti = new TicketInfo();
-        ti.setLocation("Johor Bahru");
-        ti.setDestination("Kota Bharu");
-        ti.setTime("9.00 AM");
-
-        System.out.println("PA: Requesting ticket info");
-        System.out.println("PA: Location: " + ti.getLocation());
-        System.out.println("PA: Destination: " + ti.getDestination());
-        System.out.println("PA: Time: " + ti.getTime());
-        System.out.println("");
+        //Generate book object for book request
+	    
+	BookInfo bi = new BookInfo();
+	bi.setTitle("The Flash");  
+	bi.setAuthor("Steve Austin");
+	bi.setPublisher("DC Comics");
+    
+	System.out.println("PA: Requesting book info");
+	System.out.println("PA: Title: " + bi.getTitle());
+	System.out.println("PA: Genre: " + bi.getAuthor());
+	System.out.println("PA: Publisher: " + bi.getPublisher());
+	System.out.println("");
 
         try {
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-            msg.setContentObject(ti);
-            msg.addReceiver(new AID("TA", AID.ISLOCALNAME));
+            msg.setContentObject(bi);
+            msg.addReceiver(new AID("BookAgent", AID.ISLOCALNAME));
 
             send(msg);
         } catch (Exception ex) {
