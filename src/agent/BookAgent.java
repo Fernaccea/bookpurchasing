@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  *
  * @author GATES
- BookAgent => TA
+ * BookAgent => BookAgent
  */
 public class BookAgent extends Agent {
     
@@ -127,23 +127,22 @@ public class BookAgent extends Agent {
         //book for sell list
         Book book = new Book();
         book.setId("ID0000001");
-        book.setTitle("Johor Bahru");
-        book.setAuthor("Kota Bharu");
-        book.setPublisher("Mutiara Express");
-        book.setPrice(65.50);
-        book.setAuthor("9.00 AM");    
+        book.setTitle("The Flash");
+        book.setAuthor("Steve Austin");
+        book.setPublisher("DC Comics");
+        book.setPrice(35.50);  
         book.setStatus(1);
         book.setBankAccountNo(bankAccountNo);
         
         //add to arraylist
         books.add(book);
         
-        book.setId("ID0000001");
-        book.setTitle("Johor Bahru");
-        book.setAuthor("Kota Bharu");
-        book.setPublisher("Mutiara Express");
-        book.setPrice(65.50);
-        book.setAuthor("9.00 AM");     
+        book = new Book();
+        book.setId("ID0000002");
+        book.setTitle("The Hulk");
+        book.setAuthor("Kevin Lowry");
+        book.setPublisher("DC Comics");
+        book.setPrice(24.50);      
         book.setStatus(1);
         book.setBankAccountNo(bankAccountNo);
         
@@ -155,7 +154,7 @@ public class BookAgent extends Agent {
         ArrayList result = new ArrayList();
         
         String title = bi.getTitle();
-        String genre = bi.getAuthor();
+        String author = bi.getAuthor();
         String publisher = bi.getPublisher();
         
         for(int i=0; i<books.size(); i++) {
@@ -163,7 +162,7 @@ public class BookAgent extends Agent {
            
            
             if (book.getTitle().equals(title) && 
-                    book.getAuthor().equals(genre) && 
+                    book.getAuthor().equals(author) && 
                         book.getPublisher().equals(publisher) &&
                             book.getStatus() == 1) {
                 
