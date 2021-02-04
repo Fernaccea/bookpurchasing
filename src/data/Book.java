@@ -11,21 +11,18 @@ import java.io.Serializable;
  *
  * @author GATES
  */
-public class Ticket implements Serializable {
+public class Book implements Serializable {
     
     private String id;
-    private String location;  
-    private String destination;
-    private String company;
-    private String time;
+    private String title;  
+    private String author;
+    private String publisher;
     private double price;
     private String bankAccountNo;
     
     //1 - available
     //2 - sold
     private int status;
-    
-    private int seatNo;
     
     /**
      * @return the id
@@ -42,59 +39,45 @@ public class Ticket implements Serializable {
     }
 
     /**
-     * @return the location
+     * @return the title
      */
-    public String getLocation() {
-        return location;
+    public String getTitle() {
+        return title;
     }
 
     /**
-     * @param location the location to set
+     * @param title the title to set
      */
-    public void setLocation(String location) {
-        this.location = location;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**
-     * @return the destination
+     * @return the author
      */
-    public String getDestination() {
-        return destination;
+    public String getAuthor() {
+        return author;
     }
 
     /**
-     * @param destination the destination to set
+     * @param author the author to set
      */
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     /**
-     * @return the company
+     * @return the publisher
      */
-    public String getCompany() {
-        return company;
+    public String getPublisher() {
+        return publisher;
     }
 
     /**
-     * @param company the company to set
+     * @param publisher the publisher to set
      */
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    /**
-     * @return the time
-     */
-    public String getTime() {
-        return time;
-    }
-
-    /**
-     * @param time the time to set
-     */
-    public void setTime(String time) {
-        this.time = time;
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 
     /**
@@ -123,20 +106,6 @@ public class Ticket implements Serializable {
      */
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    /**
-     * @return the seatNo
-     */
-    public int getSeatNo() {
-        return seatNo;
-    }
-
-    /**
-     * @param seatNo the seatNo to set
-     */
-    public void setSeatNo(int seatNo) {
-        this.seatNo = seatNo;
     }
     
     /**

@@ -14,59 +14,59 @@ import java.io.Serializable;
 public class PaymentInfo implements Serializable {
 
     /**
-     * @return the ticketId
+     * @return the bookId
      */
-    public String getTicketId() {
-        return ticketId;
+    public String getBookId() {
+        return bookId;
     }
 
     /**
-     * @param ticketId the ticketId to set
+     * @param bookId the bookId to set
      */
-    public void setTicketId(String ticketId) {
-        this.ticketId = ticketId;
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
     }
     
     /**
-     * @return the location
+     * @return the title
      */
-    public String getLocation() {
-        return location;
+    public String getTitle() {
+        return title;
     }
 
     /**
-     * @param location the location to set
+     * @param title the title to set
      */
-    public void setLocation(String location) {
-        this.location = location;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**
-     * @return the destination
+     * @return the author
      */
-    public String getDestination() {
-        return destination;
+    public String getAuthor() {
+        return author;
     }
 
     /**
-     * @param destination the destination to set
+     * @param author the author to set
      */
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     /**
-     * @return the time
+     * @return the publisher
      */
-    public String getTime() {
-        return time;
+    public String getPublisher() {
+        return publisher;
     }
 
     /**
-     * @param time the time to set
+     * @param publisher the publisher to set
      */
-    public void setTime(String time) {
-        this.time = time;
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 
     /**
@@ -181,11 +181,11 @@ public class PaymentInfo implements Serializable {
         this.buyerCurrentBalance = buyerCurrentBalance;
     }
     
-    private String ticketId;
-    private String location, destination, time;
+    private String bookId;
+    private String title, author, publisher;
     private double amount;
     private String buyerAccountNo; //Personal Agent
-    private String sellerAccountNo; //Ticketing Agent
+    private String sellerAccountNo; //Book Agent
     private boolean enough;
     private double sellerPreviousBalance, sellerCurrentBalance;
     private double buyerPreviousBalance, buyerCurrentBalance;
